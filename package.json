@@ -1,0 +1,70 @@
+{
+  "name": "vsc-icon",
+  "displayName": "VSC Icon",
+  "description": "A Extention that changes your Visual Studio Code Shortcut Icon.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "VSC Icon",
+      "properties": {
+        "vscIcon.iconPath": {
+          "type": "string",
+          "description": "The icon path to use for Visual Studio Code."
+        },
+        "vscIcon.shortcutPath": {
+          "type": "string",
+          "description": "The shortcut path of Visual Studio Code in the Windows Start Menu."
+        },
+        "vscIcon.promptOnActivate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Prompts the user on activation of the extention to set the icon path."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "vscIcon.setIconPath",
+        "title": "Set Icon Path"
+      },
+      {
+        "command": "vscIcon.setShortcutPath",
+        "title": "Set Shortcut Path"
+      },
+      {
+        "command": "vscIcon.setIcon",
+        "title": "Set Icon"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.90.0",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.3"
+  }
+}
