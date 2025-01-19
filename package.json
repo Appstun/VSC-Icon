@@ -2,7 +2,7 @@
   "name": "vsc-icon",
   "displayName": "VSC Icon",
   "description": "A Extention that changes your Visual Studio Code Shortcut Icon.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.90.0"
   },
