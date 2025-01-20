@@ -2,7 +2,9 @@
   "name": "vsc-icon",
   "displayName": "VSC Icon",
   "description": "A Extention that changes your Visual Studio Code Shortcut Icon.",
+  "private": true,
   "version": "0.1.0",
+  "icon": "/icons/icon.png",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -47,6 +49,10 @@
         "title": "Set Icon"
       }
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Appstun/VSC-Icon"
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
