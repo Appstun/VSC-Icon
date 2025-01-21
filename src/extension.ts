@@ -128,23 +128,24 @@ export async function activate(context: vscode.ExtensionContext) {
     );
     return;
   }
+  Index.registerCommands(context);
 
-  Index.registerCommands();
-
-  if (!Index.config.get("promptOnActivate", false)) {
+  if (Index.config.get(Config.configKeys.promptOnActivate, false)) {
+    vscode.window
+      .showInformationMessage("You are now about to change the icon of Visual Studio Code.", {
+        modal: true,
+        detail: `This is send by the extension ${Config.extensionName}.`,
+      })
+      .then(() => {
+        vscode.commands.executeCommand(Config.commands.setIconPath);
+        Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Global);
+        Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Workspace);
+      });
     return;
   }
 
-  vscode.window
-    .showInformationMessage("You are now about to change the icon of Visual Studio Code.", {
-      modal: true,
-      detail: "This is send by the extension VSC Icon.",
-    })
-    .then(() => {
-      vscode.commands.executeCommand("vscIcon.setIconPath");
-	  Index.config.update("promptOnActivate", false, vscode.ConfigurationTarget.Global);
-	  Index.config.update("promptOnActivate", false, vscode.ConfigurationTarget.Workspace);
-    });
+  FileManager.checkIconPath(Index.config.get(Config.configKeys.iconPath, ""));
+  FileManager.checkShortcutPath(Index.config.get(Config.configKeys.shortcutPath, ""));
 }
 
 export function deactivate() {}
