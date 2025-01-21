@@ -144,7 +144,8 @@ export async function activate(context: vscode.ExtensionContext) {
   }
   Index.registerCommands(context);
 
-  if (Index.config.get(Config.configKeys.promptOnActivate, false)) {
+  let promptOnActivate = context.globalState.get<boolean>(Config.globalState.promptOnActivate);
+  if (promptOnActivate === null || promptOnActivate === true) {
     let btnPress = await MessageManager.showMessage(
       {
         type: "info",
@@ -159,8 +160,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     if (btnPress === "Next Step") {
       vscode.commands.executeCommand(Config.commands.setIconPath);
-      Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Global);
-      Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Workspace);
+      context.globalState.update(Config.globalState.promptOnActivate, false);
     } else {
       MessageManager.showMessage("Ok ... see you at next start up.");
     }

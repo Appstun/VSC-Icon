@@ -27,11 +27,6 @@
         "vscIcon.shortcutPath": {
           "type": "string",
           "description": "The shortcut path of Visual Studio Code in the Windows Start Menu."
-        },
-        "vscIcon.promptOnActivate": {
-          "type": "boolean",
-          "default": true,
-          "description": "Prompts the user on activation of the extention to set the icon path."
         }
       }
     },

@@ -14,6 +14,10 @@ export namespace Config {
     promptOnActivate: "promptOnActivate",
   };
 
+  export const globalState = {
+    promptOnActivate: "ico.promptOnActivate",
+  };
+
   export const paths = {
     vscUser: `${process.env.APPDATA}\\Microsoft\\Windows\\Start Menu\\Programs\\Visual Studio Code\\Visual Studio Code.lnk`,
     vscSystem: `${process.env.ProgramData}\\Microsoft\\Windows\\Start Menu\\Programs\\Visual Studio Code\\Visual Studio Code.lnk`,
