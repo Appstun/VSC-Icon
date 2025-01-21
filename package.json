@@ -38,15 +38,18 @@
     "commands": [
       {
         "command": "vscIcon.setIconPath",
-        "title": "Set Icon Path"
+        "title": "Set Icon Path",
+        "category": "icon"
       },
       {
         "command": "vscIcon.setShortcutPath",
-        "title": "Set Shortcut Path"
+        "title": "Set Shortcut Path",
+        "category": "icon"
       },
       {
         "command": "vscIcon.setIcon",
-        "title": "Set Icon"
+        "title": "Set Icon",
+        "category": "icon"
       }
     ]
   },
