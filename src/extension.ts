@@ -39,67 +39,57 @@ export namespace Index {
     const cmdSetIconPath = vscode.commands.registerCommand(Config.commands.setIconPath, async () => {
       Index.reloadConfig();
 
-      vscode.window
-        .showInputBox({
-          title: "Enter the path to a .ico-file",
-          ignoreFocusOut: true,
-          placeHolder: "C:\\path\\to\\icon.ico",
-          value: Index.config.get(Config.configKeys.iconPath, ""),
-          validateInput: (input) => {
-            if (!input.toLowerCase().endsWith(".ico")) {
-              return "Please enter a valid .ico file path.";
-            }
-            if (!fs.existsSync(input)) {
-              return "The file does not exist.";
-            }
-            return null;
-          },
-        })
-        .then(async (value) => {
-          if (value) {
-            let isIconpath = await FileManager.checkIconPath(value);
-            if (!isIconpath) {
-              return;
-            }
+      MessageManager.showMessageWithName("Please select a icon file.");
+      let select = await vscode.window.showOpenDialog({
+        canSelectFiles: true,
+        canSelectFolders: false,
+        canSelectMany: false,
+        defaultUri: vscode.Uri.file(Config.paths.usrDesktop),
+        filters: { "Icon files": ["ico"] },
+        openLabel: "Select",
+        title: "Select a icon file",
+      });
+      if (!select) {
+        return;
+      }
+      let path = select[0].fsPath;
 
-            Index.config.update(Config.configKeys.iconPath, value, vscode.ConfigurationTarget.Global);
-            Index.config.update(Config.configKeys.iconPath, value, vscode.ConfigurationTarget.Workspace);
-            MessageManager.showMessageWithName(`The icon path has been successfully set.`);
-            vscode.commands.executeCommand(Config.commands.setIcon);
-          }
-        });
+      let isIconpath = await FileManager.checkIconPath(path);
+      if (!isIconpath) {
+        return;
+      }
+
+      Index.config.update(Config.configKeys.iconPath, path, vscode.ConfigurationTarget.Global);
+      Index.config.update(Config.configKeys.iconPath, path, vscode.ConfigurationTarget.Workspace);
+      MessageManager.showMessageWithName(`The icon path has been successfully set.`);
+      vscode.commands.executeCommand(Config.commands.setIcon);
     });
     const cmdSetShortcutPath = vscode.commands.registerCommand(Config.commands.setShortcutPath, async () => {
       Index.reloadConfig();
 
-      vscode.window
-        .showInputBox({
-          title: "Enter the path to a .lnk-file of Visual Studio Code",
-          ignoreFocusOut: true,
-          placeHolder: "C:\\path\\to\\shortcut.lnk",
-          value: Index.config.get(Config.configKeys.shortcutPath, ""),
-          validateInput: (input) => {
-            if (!input.toLowerCase().endsWith(".lnk")) {
-              return "Please enter a valid .lnk file path.";
-            }
-            if (!fs.existsSync(input)) {
-              return "The file does not exist.";
-            }
-            return null;
-          },
-        })
-        .then(async (value) => {
-          if (value) {
-            let isScpath = await FileManager.checkShortcutPath(value);
-            if (!isScpath) {
-              return;
-            }
+      MessageManager.showMessageWithName("Please select the Visual Studio Code shortcut.");
+      let select = await vscode.window.showOpenDialog({
+        canSelectFiles: true,
+        canSelectFolders: false,
+        canSelectMany: false,
+        defaultUri: vscode.Uri.file(Config.paths.usrStartMenu),
+        filters: { "Shortcut files": ["lnk"] },
+        openLabel: "Select",
+        title: "Select the VS Code shortcut file",
+      });
+      if (!select) {
+        return;
+      }
+      let path = select[0].fsPath;
 
-            Index.config.update(Config.configKeys.shortcutPath, value, vscode.ConfigurationTarget.Global);
-            Index.config.update(Config.configKeys.shortcutPath, value, vscode.ConfigurationTarget.Workspace);
-            MessageManager.showMessageWithName(`The shortcut path has been successfully set.`);
-          }
-        });
+      let isScpath = await FileManager.checkShortcutPath(path);
+      if (!isScpath) {
+        return;
+      }
+
+      Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Global);
+      Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Workspace);
+      MessageManager.showMessageWithName(`The shortcut path has been successfully set.`);
     });
     const cmdFindShortcut = vscode.commands.registerCommand(Config.commands.findShortcut, async () => {
       let path = await FileManager.findVscShortcut();

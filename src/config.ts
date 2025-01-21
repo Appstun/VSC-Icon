@@ -17,5 +17,7 @@ export namespace Config {
   export const paths = {
     vscUser: `${process.env.APPDATA}\\Microsoft\\Windows\\Start Menu\\Programs\\Visual Studio Code\\Visual Studio Code.lnk`,
     vscSystem: `${process.env.ProgramData}\\Microsoft\\Windows\\Start Menu\\Programs\\Visual Studio Code\\Visual Studio Code.lnk`,
+    usrDesktop: `${process.env.USERPROFILE}\\Desktop`,
+    usrStartMenu: `${process.env.APPDATA}\\Microsoft\\Windows\\Start Menu\\Programs`,
   };
 }
