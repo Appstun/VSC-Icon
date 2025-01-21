@@ -12,15 +12,23 @@ export namespace Index {
     const cmdSetIcon = vscode.commands.registerCommand(Config.commands.setIcon, async () => {
       Index.reloadConfig();
 
+      let progress = new MessageManager.ProgressMessage(
+        { title: Config.extensionName, firstMessage: "Checking files...." },
+        { cancellable: false }
+      );
+
       let isScpath = await FileManager.checkShortcutPath(Index.config.get(Config.configKeys.shortcutPath, ""));
       if (!isScpath) {
+        progress.finish();
         return;
       }
       let isIconpath = await FileManager.checkIconPath(Index.config.get(Config.configKeys.iconPath, ""));
       if (!isIconpath) {
+        progress.finish();
         return;
       }
 
+      progress.setProgress("Setting the icon....");
       if (
         !Powershell.setShortcutIcon(Index.config.get(Config.configKeys.shortcutPath, ""), Index.config.get(Config.configKeys.iconPath, ""))
       ) {
@@ -28,12 +36,14 @@ export namespace Index {
           type: "error",
           message: `Failed to set the icon.`,
         });
+        progress.finish();
         return;
       }
 
       MessageManager.showMessageWithName(`The icon has been successfully set.`);
       MessageManager.showMessage("You can now restart your Visual Studio Code to see the changes in the taskbar.");
       Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Global);
+      progress.finish();
     });
 
     const cmdSetIconPath = vscode.commands.registerCommand(Config.commands.setIconPath, async () => {
@@ -98,10 +108,14 @@ export namespace Index {
         Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Workspace);
         MessageManager.showMessageWithName(`The shortcut path has been successfully set.`);
       } else {
-        let btnPress = await MessageManager.showMessageWithName({
-          type: "error",
-          message: `Failed to find the Visual Studio Code shortcut. Please enter in manually.`,
-        }, undefined, ["Set Manually"]);
+        let btnPress = await MessageManager.showMessageWithName(
+          {
+            type: "error",
+            message: `Failed to find the Visual Studio Code shortcut. Please enter in manually.`,
+          },
+          undefined,
+          ["Set Manually"]
+        );
 
         if (btnPress === "Set Manually") {
           vscode.commands.executeCommand(Config.commands.setShortcutPath);
