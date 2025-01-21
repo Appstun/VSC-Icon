@@ -98,11 +98,14 @@ export namespace Index {
         Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Workspace);
         MessageManager.showMessageWithName(`The shortcut path has been successfully set.`);
       } else {
-        MessageManager.showMessageWithName({
+        let btnPress = await MessageManager.showMessageWithName({
           type: "error",
           message: `Failed to find the Visual Studio Code shortcut. Please enter in manually.`,
-        });
-        vscode.commands.executeCommand(Config.commands.setShortcutPath);
+        }, undefined, ["Set Manually"]);
+
+        if (btnPress === "Set Manually") {
+          vscode.commands.executeCommand(Config.commands.setShortcutPath);
+        }
       }
     });
 
@@ -128,20 +131,25 @@ export async function activate(context: vscode.ExtensionContext) {
   Index.registerCommands(context);
 
   if (Index.config.get(Config.configKeys.promptOnActivate, false)) {
-    MessageManager.showMessageWithName(
+    let btnPress = await MessageManager.showMessage(
       {
-        type: "error",
-        message: "You are now about to change the icon of Visual Studio Code.",
+        type: "info",
+        message: "Do you want to change the icon of Visual Studio Code?",
       },
       {
         modal: true,
-        detail: `This is send by the extension ${Config.extensionName}.`,
-      }
-    ).then(() => {
+        detail: `This message is sent from the extension ${Config.extensionName}.`,
+      },
+      ["Next Step"]
+    );
+
+    if (btnPress === "Next Step") {
       vscode.commands.executeCommand(Config.commands.setIconPath);
       Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Global);
       Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Workspace);
-    });
+    } else {
+      MessageManager.showMessage("Ok ... see you at next start up.");
+    }
     return;
   }
 
