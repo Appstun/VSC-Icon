@@ -84,9 +84,9 @@ export namespace Index {
             return null;
           },
         })
-        .then((value) => {
+        .then(async (value) => {
           if (value) {
-            let isScpath = FileManager.checkShortcutPath(value);
+            let isScpath = await FileManager.checkShortcutPath(value);
             if (!isScpath) {
               return;
             }

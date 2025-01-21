@@ -6,9 +6,9 @@ import { Powershell } from "./powershell";
 import { Config } from "./config";
 
 export namespace FileManager {
-  export function checkShortcutPath(shortcutPath: string): boolean {
+  export async function checkShortcutPath(shortcutPath: string): Promise<boolean> {
     if (!shortcutPath || shortcutPath.trim() === "") {
-      let path = `${process.env.APPDATA}\\Microsoft\\Windows\\Start Menu\\Programs\\Visual Studio Code\\Visual Studio Code.lnk`;
+      let path = (await findVscShortcut()) || Config.paths.vscUser;
       Index.config.update("shortcutPath", path, vscode.ConfigurationTarget.Global);
       shortcutPath = path;
     }
@@ -44,7 +44,7 @@ export namespace FileManager {
     return true;
   }
 
-  export function checkIconPath(iconPath: string): boolean {
+  export async function checkIconPath(iconPath: string): Promise<boolean> {
     if (!iconPath || iconPath.trim() === "") {
       return false;
     }
@@ -57,5 +57,22 @@ export namespace FileManager {
       return false;
     }
     return true;
+  }
+
+  export async function findVscShortcut(): Promise<string | undefined> {
+    let result: string | undefined = undefined;
+    if (fs.existsSync(Config.paths.vscUser)) {
+      result = Config.paths.vscUser;
+    } else {
+      if (fs.existsSync(Config.paths.vscSystem)) {
+        const userDir = path.dirname(Config.paths.vscUser);
+        if (!fs.existsSync(userDir)) {
+          fs.mkdirSync(userDir, { recursive: true });
+        }
+        fs.copyFileSync(Config.paths.vscSystem, Config.paths.vscUser);
+        result = Config.paths.vscUser;
+      }
+    }
+    return result;
   }
 }

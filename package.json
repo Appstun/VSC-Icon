@@ -50,6 +50,11 @@
         "command": "vscIcon.setIcon",
         "title": "Set Icon",
         "category": "icon"
+      },
+      {
+        "command": "vscIcon.findShortcut",
+        "title": "Find Shortcut",
+        "category": "icon"
       }
     ]
   },
