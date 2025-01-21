@@ -3,6 +3,7 @@ import * as fs from "fs";
 import { Powershell } from "./powershell";
 import { FileManager } from "./FileManager";
 import { Config } from "./config";
+import { MessageManager } from "./MessageManager";
 
 export namespace Index {
   export let config = vscode.workspace.getConfiguration(Config.extentionId);
@@ -23,12 +24,15 @@ export namespace Index {
       if (
         !Powershell.setShortcutIcon(Index.config.get(Config.configKeys.shortcutPath, ""), Index.config.get(Config.configKeys.iconPath, ""))
       ) {
-        vscode.window.showErrorMessage(`${Config.extensionName}: Failed to set the icon.`);
+        MessageManager.showMessageWithName({
+          type: "error",
+          message: `Failed to set the icon.`,
+        });
         return;
       }
 
-      vscode.window.showInformationMessage(`${Config.extensionName}: The icon has been successfully set.`);
-      vscode.window.showInformationMessage("You can now restart your Visual Studio Code to see the changes in the taskbar.");
+      MessageManager.showMessageWithName(`The icon has been successfully set.`);
+      MessageManager.showMessage("You can now restart your Visual Studio Code to see the changes in the taskbar.");
       Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Global);
     });
 
@@ -60,7 +64,7 @@ export namespace Index {
 
             Index.config.update(Config.configKeys.iconPath, value, vscode.ConfigurationTarget.Global);
             Index.config.update(Config.configKeys.iconPath, value, vscode.ConfigurationTarget.Workspace);
-            vscode.window.showInformationMessage(`${Config.extensionName}: The icon path has been successfully set.`);
+            MessageManager.showMessageWithName(`The icon path has been successfully set.`);
             vscode.commands.executeCommand(Config.commands.setIcon);
           }
         });
@@ -93,7 +97,7 @@ export namespace Index {
 
             Index.config.update(Config.configKeys.shortcutPath, value, vscode.ConfigurationTarget.Global);
             Index.config.update(Config.configKeys.shortcutPath, value, vscode.ConfigurationTarget.Workspace);
-            vscode.window.showInformationMessage(`${Config.extensionName}: The shortcut path has been successfully set.`);
+            MessageManager.showMessageWithName(`The shortcut path has been successfully set.`);
           }
         });
     });
@@ -102,11 +106,12 @@ export namespace Index {
       if (path) {
         Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Global);
         Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Workspace);
-        vscode.window.showInformationMessage(`${Config.extensionName}: The shortcut path has been successfully set.`);
+        MessageManager.showMessageWithName(`The shortcut path has been successfully set.`);
       } else {
-        vscode.window.showErrorMessage(
-          `${Config.extensionName}: Failed to find the Visual Studio Code shortcut. Please enter in manually.`
-        );
+        MessageManager.showMessageWithName({
+          type: "error",
+          message: `Failed to find the Visual Studio Code shortcut. Please enter in manually.`,
+        });
       }
     });
 
@@ -123,24 +128,29 @@ export namespace Index {
 
 export async function activate(context: vscode.ExtensionContext) {
   if (process.platform !== "win32") {
-    vscode.window.showErrorMessage(
-      `${Config.extensionName}: This extension only works on Windows. Other platforms are not supported currently.`
-    );
+    MessageManager.showMessageWithName({
+      type: "error",
+      message: `This extension only works on Windows. Other platforms are not supported currently.`,
+    });
     return;
   }
   Index.registerCommands(context);
 
   if (Index.config.get(Config.configKeys.promptOnActivate, false)) {
-    vscode.window
-      .showInformationMessage("You are now about to change the icon of Visual Studio Code.", {
+    MessageManager.showMessageWithName(
+      {
+        type: "error",
+        message: "You are now about to change the icon of Visual Studio Code.",
+      },
+      {
         modal: true,
         detail: `This is send by the extension ${Config.extensionName}.`,
-      })
-      .then(() => {
-        vscode.commands.executeCommand(Config.commands.setIconPath);
-        Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Global);
-        Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Workspace);
-      });
+      }
+    ).then(() => {
+      vscode.commands.executeCommand(Config.commands.setIconPath);
+      Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Global);
+      Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Workspace);
+    });
     return;
   }
 

@@ -1,4 +1,7 @@
 import * as vscode from "vscode";
+import { Config } from "./config";
+
+export type MessageType = "warning" | "info" | "error";
 export namespace MessageManager {
   export class ProgressMessage {
     private progress: vscode.Progress<{ message?: string; increment?: number }> | undefined;
@@ -61,5 +64,61 @@ export namespace MessageManager {
         }, ms);
       });
     }
+  }
+
+  export async function showMessage<T extends string>(
+    text: { type: MessageType; message: string } | string,
+    options?: vscode.MessageOptions
+  ): Promise<undefined>;
+  export async function showMessage<T extends string>(
+    text: { type: MessageType; message: string } | string,
+    options?: vscode.MessageOptions,
+    items?: T[]
+  ): Promise<T | undefined>;
+  export async function showMessage<T extends string>(
+    text: { type: MessageType; message: string } | string,
+    options?: vscode.MessageOptions,
+    items?: T[]
+  ): Promise<T | undefined> {
+    let data = typeof text === "string" ? { type: "info" as MessageType, message: text } : text;
+    items = items || [];
+
+    if (options === undefined) {
+      switch (data.type) {
+        case "error":
+          return await vscode.window.showErrorMessage(data.message, ...items);
+        case "warning":
+          return await vscode.window.showWarningMessage(data.message, ...items);
+        case "info":
+          return await vscode.window.showInformationMessage(data.message, ...items);
+      }
+    } else {
+      switch (data.type) {
+        case "error":
+          return await vscode.window.showErrorMessage(data.message, options, ...items);
+        case "warning":
+          return await vscode.window.showWarningMessage(data.message, options, ...items);
+        case "info":
+          return await vscode.window.showInformationMessage(data.message, options, ...items);
+      }
+    }
+  }
+
+  export async function showMessageWithName<T extends string>(
+    text: { type: MessageType; message: string } | string,
+    options?: vscode.MessageOptions
+  ): Promise<undefined>;
+  export async function showMessageWithName<T extends string>(
+    text: { type: MessageType; message: string } | string,
+    options?: vscode.MessageOptions,
+    items?: T[]
+  ): Promise<T | undefined>;
+  export async function showMessageWithName<T extends string>(
+    text: { type: MessageType; message: string } | string,
+    options?: vscode.MessageOptions,
+    items?: T[]
+  ): Promise<T | undefined> {
+    let data = typeof text === "string" ? { type: "info" as MessageType, message: text } : text;
+    return showMessage({ type: data.type, message: `${Config.extensionName}: ${data.message}` }, options, items ?? []);
   }
 }

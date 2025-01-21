@@ -4,27 +4,33 @@ import * as fs from "fs";
 import { Index } from "./extension";
 import { Powershell } from "./powershell";
 import { Config } from "./config";
-import { MessageManager } from "./MessageManager";
+import { MessageManager, MessageType } from "./MessageManager";
 
 export namespace FileManager {
-  export async function checkShortcutPath(shortcutPath: string): Promise<boolean> {
+  export async function checkShortcutPath(shortcutPath: string, showAsWarning: boolean = false): Promise<boolean> {
     if (!shortcutPath || shortcutPath.trim() === "") {
       let path = (await findVscShortcut()) || Config.paths.vscUser;
       Index.config.update("shortcutPath", path, vscode.ConfigurationTarget.Global);
       shortcutPath = path;
     }
     if (!fs.existsSync(shortcutPath)) {
-      vscode.window.showErrorMessage(`${Config.extensionName}: The provided shortcut path does not exist.`);
+      MessageManager.showMessageWithName({
+        type: showAsWarning ? "warning" : "error",
+        message: `The provided shortcut path does not exist.`,
+      });
       return false;
     }
     if (path.extname(shortcutPath).toLowerCase() !== ".lnk") {
-      vscode.window.showErrorMessage(`${Config.extensionName}: The provided shortcut path is not a valid shortcut file.`);
+      MessageManager.showMessageWithName({
+        type: showAsWarning ? "warning" : "error",
+        message: `The provided shortcut path is not a valid shortcut file.`,
+      });
       return false;
     }
 
     const scData = Powershell.getShortcutData(shortcutPath);
     if (!scData) {
-      vscode.window.showErrorMessage(`${Config.extensionName}: Failed to get shortcut data.`);
+      MessageManager.showMessageWithName({ type: showAsWarning ? "warning" : "error", message: `Failed to get shortcut data.` });
       return false;
     }
     const codePaths = Powershell.getCodeProcessPath();
@@ -38,23 +44,32 @@ export namespace FileManager {
       }
     }
     if (!found) {
-      vscode.window.showErrorMessage(`${Config.extensionName}: The shortcut path does not point to a valid Visual Studio Code executable.`);
+      MessageManager.showMessageWithName({
+        type: showAsWarning ? "warning" : "error",
+        message: `The shortcut path does not point to a valid Visual Studio Code executable.`,
+      });
       return false;
     }
 
     return true;
   }
 
-  export async function checkIconPath(iconPath: string): Promise<boolean> {
+  export async function checkIconPath(iconPath: string, showAsWarning: boolean = false): Promise<boolean> {
     if (!iconPath || iconPath.trim() === "") {
       return false;
     }
     if (!fs.existsSync(iconPath)) {
-      vscode.window.showErrorMessage(`${Config.extensionName}: The provided icon path does not exist.`);
+      MessageManager.showMessageWithName({
+        type: showAsWarning ? "warning" : "error",
+        message: `The provided icon path does not exist.`,
+      });
       return false;
     }
     if (path.extname(iconPath).toLowerCase() !== ".ico") {
-      vscode.window.showErrorMessage(`${Config.extensionName}: The provided icon path is not a valid icon file.`);
+      MessageManager.showMessageWithName({
+        type: showAsWarning ? "warning" : "error",
+        message: `The provided icon path is not a valid icon file.`,
+      });
       return false;
     }
     return true;
