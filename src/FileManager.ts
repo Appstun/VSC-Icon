@@ -4,6 +4,7 @@ import * as fs from "fs";
 import { Index } from "./extension";
 import { Powershell } from "./powershell";
 import { Config } from "./config";
+import { MessageManager } from "./MessageManager";
 
 export namespace FileManager {
   export async function checkShortcutPath(shortcutPath: string): Promise<boolean> {
@@ -61,10 +62,20 @@ export namespace FileManager {
 
   export async function findVscShortcut(): Promise<string | undefined> {
     let result: string | undefined = undefined;
+    const progress = new MessageManager.ProgressMessage({
+      title: Config.extensionName,
+      firstMessage: "Checking for VS Code shortcuts...",
+    });
+    await progress.waitMiliseconds(250);
     if (fs.existsSync(Config.paths.vscUser)) {
+      progress.setProgress("Found VS Code shortcut (User).");
       result = Config.paths.vscUser;
     } else {
       if (fs.existsSync(Config.paths.vscSystem)) {
+        progress.setProgress("Found VS Code shortcut (System).");
+        await progress.waitMiliseconds(750);
+        progress.setProgress("Copying System shortcut to User ...");
+
         const userDir = path.dirname(Config.paths.vscUser);
         if (!fs.existsSync(userDir)) {
           fs.mkdirSync(userDir, { recursive: true });
@@ -73,6 +84,9 @@ export namespace FileManager {
         result = Config.paths.vscUser;
       }
     }
+
+    await progress.waitMiliseconds(250);
+    progress.finish();
     return result;
   }
 }
