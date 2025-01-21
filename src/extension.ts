@@ -145,8 +145,8 @@ export async function activate(context: vscode.ExtensionContext) {
     return;
   }
 
-  FileManager.checkIconPath(Index.config.get(Config.configKeys.iconPath, ""));
-  FileManager.checkShortcutPath(Index.config.get(Config.configKeys.shortcutPath, ""));
+  FileManager.checkIconPath(Index.config.get(Config.configKeys.iconPath, ""), true);
+  FileManager.checkShortcutPath(Index.config.get(Config.configKeys.shortcutPath, ""), true);
 }
 
 export function deactivate() {}
