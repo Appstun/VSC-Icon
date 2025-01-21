@@ -60,6 +60,10 @@ export namespace FileManager {
 
   export async function checkIconPath(iconPath: string, isStartUpCheck: boolean = false): Promise<boolean> {
     if (!iconPath || iconPath.trim() === "") {
+      MessageManager.showMessageWithName({
+        type: isStartUpCheck ? "warning" : "error",
+        message: `There is no icon path set.`,
+      });
       return false;
     }
     if (!fs.existsSync(iconPath)) {
