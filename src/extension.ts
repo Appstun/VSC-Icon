@@ -112,6 +112,7 @@ export namespace Index {
           type: "error",
           message: `Failed to find the Visual Studio Code shortcut. Please enter in manually.`,
         });
+        vscode.commands.executeCommand(Config.commands.setShortcutPath);
       }
     });
 
