@@ -26,7 +26,7 @@ If you have a custom icon for VS Code, it will be reverted to the default icon.
 
 1. Run the `Set Shortcut Path` command
 2. Enter the path of the shortcut for Visual Studio Code.
-       - To find the Shortcut, open the Windows start menu. Search "Visual Studio Code" in the Search bar. Right-click on the item for VS Code and click on "Open file location". Copy the file location of the selected Shortcut item and paste it in the input box of the extension.
+   - To find the Shortcut, open the Windows start menu. Search "Visual Studio Code" in the Search bar. Right-click on the item for VS Code and click on "Open file location". Copy the file location of the selected Shortcut item and paste it in the input box of the extension.
 
 ### If the icon is reverted
 
@@ -35,12 +35,12 @@ If you have a custom icon for VS Code, it will be reverted to the default icon.
 ## Commands
 
 - `Set Icon Path`
-      - Set the path of a .ico-file you wish to see as the VS Code Icon
-      - Sets the given path as icon.
-- `Set Shortcut Path`:
-      - Set the path to the path of the VS Code shortcut.
-- `Set Icon`
-      - Sets the icon of Visual Studio Code.
+  - Set the path of a .ico-file you wish to see as the VS Code Icon<br>
+  - Sets the given path as icon.
+- `Set Shortcut Path`:<br>
+  - Set the path to the path of the VS Code shortcut.<br>
+- `Set Icon`<br>
+  - Sets the icon of Visual Studio Code.
 
 > To run an extention command press `Strg + p` and type the command in the input box.
 
