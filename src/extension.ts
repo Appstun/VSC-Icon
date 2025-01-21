@@ -5,10 +5,12 @@ import { FileManager } from "./FileManager";
 import { Config } from "./config";
 
 export namespace Index {
-  export const config = vscode.workspace.getConfiguration("vscIcon");
+  export let config = vscode.workspace.getConfiguration(Config.extentionId);
 
   export function registerCommands({ subscriptions }: vscode.ExtensionContext) {
     const cmdSetIcon = vscode.commands.registerCommand(Config.commands.setIcon, async () => {
+      Index.reloadConfig();
+
       let isScpath = await FileManager.checkShortcutPath(Index.config.get(Config.configKeys.shortcutPath, ""));
       if (!isScpath) {
         return;
@@ -31,6 +33,8 @@ export namespace Index {
     });
 
     const cmdSetIconPath = vscode.commands.registerCommand(Config.commands.setIconPath, async () => {
+      Index.reloadConfig();
+
       vscode.window
         .showInputBox({
           title: "Enter the path to a .ico-file",
@@ -62,6 +66,8 @@ export namespace Index {
         });
     });
     const cmdSetShortcutPath = vscode.commands.registerCommand(Config.commands.setShortcutPath, async () => {
+      Index.reloadConfig();
+
       vscode.window
         .showInputBox({
           title: "Enter the path to a .lnk-file of Visual Studio Code",
@@ -108,6 +114,10 @@ export namespace Index {
     subscriptions.push(cmdSetIconPath);
     subscriptions.push(cmdSetShortcutPath);
     subscriptions.push(cmdFindShortcut);
+  }
+
+  export function reloadConfig() {
+    Index.config = vscode.workspace.getConfiguration(Config.extentionId);
   }
 }
 
