@@ -157,10 +157,11 @@ export namespace Index {
 }
 
 export async function activate(context: vscode.ExtensionContext) {
-  if (!Index.dev_states.clearStates) {
-    const keys = Index.globalState.keys();
+  if (Index.dev_states.clearStates) {
+    console.log("Clearing global state...");
+    const keys = context.globalState.keys();
     for (const key of keys) {
-      await Index.globalState.update(key, undefined);
+      await context.globalState.update(key, undefined);
     }
   }
   Index.globalState = context.globalState;
