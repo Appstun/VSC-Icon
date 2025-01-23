@@ -9,6 +9,7 @@ export namespace FileManager {
   export async function checkShortcutPath(shortcutPath: string, isStartUpCheck: boolean = false): Promise<boolean> {
     if (!shortcutPath || shortcutPath.trim() === "") {
       if (isStartUpCheck) {
+        Index.pathStates.shortcut = false;
         return false;
       }
 
@@ -21,6 +22,7 @@ export namespace FileManager {
         type: isStartUpCheck ? "warning" : "error",
         message: `The provided shortcut path does not exist.`,
       });
+      Index.pathStates.shortcut = false;
       return false;
     }
     if (path.extname(shortcutPath).toLowerCase() !== ".lnk") {
@@ -28,12 +30,14 @@ export namespace FileManager {
         type: isStartUpCheck ? "warning" : "error",
         message: `The provided shortcut path is not a valid shortcut file.`,
       });
+      Index.pathStates.shortcut = false;
       return false;
     }
 
     const scData = Powershell.getShortcutData(shortcutPath);
     if (!scData) {
       MessageManager.showMessageWithName({ type: isStartUpCheck ? "warning" : "error", message: `Failed to get shortcut data.` });
+      Index.pathStates.shortcut = false;
       return false;
     }
     const codePaths = Powershell.getCodeProcessPath();
@@ -51,9 +55,11 @@ export namespace FileManager {
         type: isStartUpCheck ? "warning" : "error",
         message: `The shortcut path does not point to a valid Visual Studio Code executable.`,
       });
+      Index.pathStates.shortcut = false;
       return false;
     }
 
+    Index.pathStates.shortcut = true;
     return true;
   }
 
@@ -63,6 +69,7 @@ export namespace FileManager {
         type: isStartUpCheck ? "warning" : "error",
         message: `There is no icon path set.`,
       });
+      Index.pathStates.icon = false;
       return false;
     }
     if (!fs.existsSync(iconPath)) {
@@ -70,6 +77,7 @@ export namespace FileManager {
         type: isStartUpCheck ? "warning" : "error",
         message: `The provided icon path does not exist.`,
       });
+      Index.pathStates.icon = false;
       return false;
     }
     if (path.extname(iconPath).toLowerCase() !== ".ico") {
@@ -77,8 +85,10 @@ export namespace FileManager {
         type: isStartUpCheck ? "warning" : "error",
         message: `The provided icon path is not a valid icon file.`,
       });
+      Index.pathStates.icon = false;
       return false;
     }
+    Index.pathStates.icon = true;
     return true;
   }
 
@@ -109,6 +119,7 @@ export namespace FileManager {
 
     await progress.waitMiliseconds(250);
     progress.finish();
+    Index.pathStates.shortcut = result !== undefined;
     return result;
   }
 }

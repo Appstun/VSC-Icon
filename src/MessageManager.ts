@@ -121,4 +121,20 @@ export namespace MessageManager {
     let data = typeof text === "string" ? { type: "info" as MessageType, message: text } : text;
     return showMessage({ type: data.type, message: `${Config.extensionName}: ${data.message}` }, options, items ?? []);
   }
+
+  export async function showQuickPick<T extends string>(items: T[], options?: vscode.QuickPickOptions): Promise<number | undefined>;
+  export async function showQuickPick<T extends string>(
+    items: T[],
+    options: vscode.QuickPickOptions & { canPickMany: true }
+  ): Promise<number[] | undefined>;
+  export async function showQuickPick<T extends string>(items: T[], options?: vscode.QuickPickOptions): Promise<number[] | number | undefined> {
+    const result = (await vscode.window.showQuickPick(items, options)) as T[] | T | undefined;
+    if (result === undefined) {
+      return undefined;
+    }
+    if (Array.isArray(result)) {
+      return result.map((item) => items.indexOf(item));
+    }
+    return items.indexOf(result);
+  }
 }

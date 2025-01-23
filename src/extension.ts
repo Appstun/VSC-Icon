@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import * as fs from "fs";
 import { Powershell } from "./powershell";
 import { FileManager } from "./FileManager";
 import { Config } from "./config";
@@ -7,6 +6,8 @@ import { MessageManager } from "./MessageManager";
 
 export namespace Index {
   export let globalState: vscode.Memento;
+  export let pathStates = { icon: false, shortcut: false };
+  export const dev_states = { clearStates: false };
 
   export function registerCommands({ subscriptions }: vscode.ExtensionContext) {
     const cmdSetIcon = vscode.commands.registerCommand(Config.commands.setIcon, async () => {
@@ -116,15 +117,52 @@ export namespace Index {
         }
       }
     });
+    const cmdMenu = vscode.commands.registerCommand(Config.commands.menu, async () => {
+      let choice = await MessageManager.showQuickPick(
+        [
+          `${pathStates.icon && pathStates.shortcut ? "$(star)" : "$(error)"}` + `       $(screen-full)  Set Icon as VS Code Shortcut Icon`,
+          `${!pathStates.icon ? "$(warning)" : "$(pass)"}` + `       $(folder-opened)  Select Icon Path`,
+          `${!pathStates.shortcut ? "$(warning)" : "$(pass)"}` + `       $(file-symlink-file)  Select VS Code Shortcut Path`,
+          `            $(search)  Find VS Code Shortcut Path`,
+        ],
+        {
+          title: "[MENU] VSC Icon",
+          canPickMany: false,
+          placeHolder: "Select an option",
+        }
+      );
+
+      switch (choice) {
+        case 0:
+          vscode.commands.executeCommand(Config.commands.setIcon);
+          break;
+        case 1:
+          vscode.commands.executeCommand(Config.commands.setIconPath);
+          break;
+        case 2:
+          vscode.commands.executeCommand(Config.commands.setShortcutPath);
+          break;
+        case 3:
+          vscode.commands.executeCommand(Config.commands.findShortcut);
+          break;
+      }
+    });
 
     subscriptions.push(cmdSetIcon);
     subscriptions.push(cmdSetIconPath);
     subscriptions.push(cmdSetShortcutPath);
     subscriptions.push(cmdFindShortcut);
+    subscriptions.push(cmdMenu);
   }
 }
 
 export async function activate(context: vscode.ExtensionContext) {
+  if (!Index.dev_states.clearStates) {
+    const keys = Index.globalState.keys();
+    for (const key of keys) {
+      await Index.globalState.update(key, undefined);
+    }
+  }
   Index.globalState = context.globalState;
 
   if (process.platform !== "win32") {

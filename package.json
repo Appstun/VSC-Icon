@@ -36,6 +36,12 @@
         "command": "vscIcon.findShortcut",
         "title": "Find Shortcut",
         "category": "icon"
+      },
+      {
+        "command": "vscIcon.menu",
+        "title": "VSC Icon Menu",
+        "icon": "layout-menubar",
+        "category": ".icon"
       }
     ]
   },

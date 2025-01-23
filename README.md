@@ -1,7 +1,7 @@
 This extension changes the shortcut icon of your Visual Studio Code to an icon you like.
 If you have a custom icon for VS Code, it will be reverted to the default icon when you install an update.
 
-## Requirement
+## Requirements
 
 - Windows installation
 - PowerShell
@@ -32,6 +32,8 @@ If you have a custom icon for VS Code, it will be reverted to the default icon w
 
 ## Commands
 
+- `VSC Icon Menu`
+  - A Menu for selecting and running the other commands.
 - `Set Icon Path`
   - Set the path of a .ico-file you wish to see as the VS Code Icon
   - Sets the given path as icon.

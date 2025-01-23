@@ -7,6 +7,7 @@ export namespace Config {
     setIconPath: `${extentionId}.setIconPath`,
     setShortcutPath: `${extentionId}.setShortcutPath`,
     findShortcut: `${extentionId}.findShortcut`,
+    menu: `${extentionId}.menu`,
   };
   export const globalState = {
     iconPath: "ico.iconPath",
