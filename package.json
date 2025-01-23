@@ -16,20 +16,6 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "configuration": {
-      "type": "object",
-      "title": "VSC Icon",
-      "properties": {
-        "vscIcon.iconPath": {
-          "type": "string",
-          "description": "The icon path to use for Visual Studio Code."
-        },
-        "vscIcon.shortcutPath": {
-          "type": "string",
-          "description": "The shortcut path of Visual Studio Code in the Windows Start Menu."
-        }
-      }
-    },
     "commands": [
       {
         "command": "vscIcon.setIconPath",

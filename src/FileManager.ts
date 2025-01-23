@@ -1,4 +1,3 @@
-import * as vscode from "vscode";
 import path from "path";
 import * as fs from "fs";
 import { Index } from "./extension";
@@ -14,7 +13,7 @@ export namespace FileManager {
       }
 
       let path = (await findVscShortcut()) || Config.paths.vscUser;
-      Index.config.update("shortcutPath", path, vscode.ConfigurationTarget.Global);
+      Index.globalState.update("shortcutPath", path);
       shortcutPath = path;
     }
     if (!fs.existsSync(shortcutPath)) {

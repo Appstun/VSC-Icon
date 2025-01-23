@@ -6,23 +6,21 @@ import { Config } from "./config";
 import { MessageManager } from "./MessageManager";
 
 export namespace Index {
-  export let config = vscode.workspace.getConfiguration(Config.extentionId);
+  export let globalState: vscode.Memento;
 
   export function registerCommands({ subscriptions }: vscode.ExtensionContext) {
     const cmdSetIcon = vscode.commands.registerCommand(Config.commands.setIcon, async () => {
-      Index.reloadConfig();
-
       let progress = new MessageManager.ProgressMessage(
         { title: Config.extensionName, firstMessage: "Checking files...." },
         { cancellable: false }
       );
 
-      let isScpath = await FileManager.checkShortcutPath(Index.config.get(Config.configKeys.shortcutPath, ""));
+      let isScpath = await FileManager.checkShortcutPath(Index.globalState.get(Config.globalState.shortcutPath, ""));
       if (!isScpath) {
         progress.finish();
         return;
       }
-      let isIconpath = await FileManager.checkIconPath(Index.config.get(Config.configKeys.iconPath, ""));
+      let isIconpath = await FileManager.checkIconPath(Index.globalState.get(Config.globalState.iconPath, ""));
       if (!isIconpath) {
         progress.finish();
         return;
@@ -30,7 +28,10 @@ export namespace Index {
 
       progress.setProgress("Setting the icon....");
       if (
-        !Powershell.setShortcutIcon(Index.config.get(Config.configKeys.shortcutPath, ""), Index.config.get(Config.configKeys.iconPath, ""))
+        !Powershell.setShortcutIcon(
+          Index.globalState.get(Config.globalState.shortcutPath, ""),
+          Index.globalState.get(Config.globalState.iconPath, "")
+        )
       ) {
         MessageManager.showMessageWithName({
           type: "error",
@@ -42,13 +43,11 @@ export namespace Index {
 
       MessageManager.showMessageWithName(`The icon has been successfully set.`);
       MessageManager.showMessage("You can now restart your Visual Studio Code to see the changes in the taskbar.");
-      Index.config.update(Config.configKeys.promptOnActivate, false, vscode.ConfigurationTarget.Global);
+      Index.globalState.update(Config.globalState.promptOnActivate, false);
       progress.finish();
     });
 
     const cmdSetIconPath = vscode.commands.registerCommand(Config.commands.setIconPath, async () => {
-      Index.reloadConfig();
-
       MessageManager.showMessageWithName("Please select a icon file.");
       let select = await vscode.window.showOpenDialog({
         canSelectFiles: true,
@@ -69,14 +68,11 @@ export namespace Index {
         return;
       }
 
-      Index.config.update(Config.configKeys.iconPath, path, vscode.ConfigurationTarget.Global);
-      Index.config.update(Config.configKeys.iconPath, path, vscode.ConfigurationTarget.Workspace);
+      Index.globalState.update(Config.globalState.iconPath, path);
       MessageManager.showMessageWithName(`The icon path has been successfully set.`);
       vscode.commands.executeCommand(Config.commands.setIcon);
     });
     const cmdSetShortcutPath = vscode.commands.registerCommand(Config.commands.setShortcutPath, async () => {
-      Index.reloadConfig();
-
       MessageManager.showMessageWithName("Please select the Visual Studio Code shortcut.");
       let select = await vscode.window.showOpenDialog({
         canSelectFiles: true,
@@ -97,15 +93,13 @@ export namespace Index {
         return;
       }
 
-      Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Global);
-      Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Workspace);
+      Index.globalState.update(Config.globalState.shortcutPath, path);
       MessageManager.showMessageWithName(`The shortcut path has been successfully set.`);
     });
     const cmdFindShortcut = vscode.commands.registerCommand(Config.commands.findShortcut, async () => {
       let path = await FileManager.findVscShortcut();
       if (path) {
-        Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Global);
-        Index.config.update(Config.configKeys.shortcutPath, path, vscode.ConfigurationTarget.Workspace);
+        Index.globalState.update(Config.globalState.shortcutPath, path);
         MessageManager.showMessageWithName(`The shortcut path has been successfully set.`);
       } else {
         let btnPress = await MessageManager.showMessageWithName(
@@ -128,13 +122,11 @@ export namespace Index {
     subscriptions.push(cmdSetShortcutPath);
     subscriptions.push(cmdFindShortcut);
   }
-
-  export function reloadConfig() {
-    Index.config = vscode.workspace.getConfiguration(Config.extentionId);
-  }
 }
 
 export async function activate(context: vscode.ExtensionContext) {
+  Index.globalState = context.globalState;
+
   if (process.platform !== "win32") {
     MessageManager.showMessageWithName({
       type: "error",

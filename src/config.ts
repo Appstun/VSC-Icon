@@ -8,14 +8,11 @@ export namespace Config {
     setShortcutPath: `${extentionId}.setShortcutPath`,
     findShortcut: `${extentionId}.findShortcut`,
   };
-  export const configKeys = {
-    iconPath: "iconPath",
-    shortcutPath: "shortcutPath",
-    promptOnActivate: "promptOnActivate",
-  };
-
   export const globalState = {
+    iconPath: "ico.iconPath",
+    shortcutPath: "ico.shortcutPath",
     promptOnActivate: "ico.promptOnActivate",
+    vscVersion: "vsc.version",
   };
 
   export const paths = {
