@@ -7,7 +7,7 @@ import { MessageManager } from "./MessageManager";
 export namespace Index {
   export let globalState: vscode.Memento;
   export let logger = vscode.window.createOutputChannel(Config.extensionName);
-  export let pathStates = { icon: false, shortcut: false };
+  export let pathStates: { icon: boolean | "question"; shortcut: boolean | "question" } = { icon: false, shortcut: false };
   export const dev_states = { clearStates: false };
 
   export function registerCommands({ subscriptions }: vscode.ExtensionContext) {
@@ -39,6 +39,7 @@ export namespace Index {
           type: "error",
           message: `Failed to set the icon. Please check the paths.`,
         });
+        pathStates = { icon: "question", shortcut: "question" };
         progress.finish();
         return;
       }
@@ -119,11 +120,24 @@ export namespace Index {
       }
     });
     const cmdMenu = vscode.commands.registerCommand(Config.commands.menu, async () => {
+      let iconIcon = "$(warning)";
+      let iconShortcut = "$(warning)";
+      if (pathStates.icon === true) {
+        iconIcon = "$(pass)";
+      } else if (pathStates.icon === "question") {
+        iconIcon = "$(question)";
+      }
+      if (pathStates.shortcut === true) {
+        iconShortcut = "$(pass)";
+      } else if (pathStates.shortcut === "question") {
+        iconShortcut = "$(question)";
+      }
+
       let choice = await MessageManager.showQuickPick(
         [
           `${pathStates.icon && pathStates.shortcut ? "$(star)" : "$(error)"}` + `       $(screen-full)  Set Icon as VS Code Shortcut Icon`,
-          `${!pathStates.icon ? "$(warning)" : "$(pass)"}` + `       $(folder-opened)  Select Icon Path`,
-          `${!pathStates.shortcut ? "$(warning)" : "$(pass)"}` + `       $(file-symlink-file)  Select VS Code Shortcut Path`,
+          `${iconIcon}` + `       $(folder-opened)  Select Icon Path`,
+          `${iconShortcut}` + `       $(file-symlink-file)  Select VS Code Shortcut Path`,
           `            $(search)  Find VS Code Shortcut Path`,
         ],
         {

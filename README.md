@@ -34,6 +34,7 @@ If you have a custom icon for VS Code, it will be reverted to the default icon w
 
 - `VSC Icon Menu`
   - A Menu for selecting and running the other commands.
+  - It is also helpful to see what is wrong or needed to do.
 - `Set Icon Path`
   - Set the path of a .ico-file you wish to see as the VS Code Icon
   - Sets the given path as icon.
