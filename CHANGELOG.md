@@ -7,3 +7,9 @@ See the Github commits for a complete change log.
 
 - Initial release
 - Added all current features
+
+## [0.1.1] - 2025-01-28
+
+### Changed
+
+- Fixed first-time popup

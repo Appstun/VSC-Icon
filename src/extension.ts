@@ -49,7 +49,6 @@ export namespace Index {
         type: "warning",
         message: "Please restart VS Code to see the changes in the taskbar.",
       });
-      Index.globalState.update(Config.globalState.promptOnActivate, false);
       progress.finish();
     });
 
@@ -200,8 +199,8 @@ export async function activate(context: vscode.ExtensionContext) {
   }
   Index.registerCommands(context);
 
-  let promptOnActivate = context.globalState.get<boolean>(Config.globalState.promptOnActivate);
-  if (promptOnActivate === null || promptOnActivate === true) {
+  let promptOnActivate = context.globalState.get<boolean>(Config.globalState.promptOnActivate) ?? true;
+  if (promptOnActivate === true) {
     let btnPress = await MessageManager.showMessage(
       {
         type: "info",
