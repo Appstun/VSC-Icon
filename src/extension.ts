@@ -45,7 +45,10 @@ export namespace Index {
       }
 
       MessageManager.showMessageWithName(`The icon has been successfully set.`);
-      MessageManager.showMessage("You can now restart your Visual Studio Code to see the changes in the taskbar.");
+      MessageManager.showMessage({
+        type: "warning",
+        message: "Please restart VS Code to see the changes in the taskbar.",
+      });
       Index.globalState.update(Config.globalState.promptOnActivate, false);
       progress.finish();
     });
@@ -72,8 +75,15 @@ export namespace Index {
       }
 
       Index.globalState.update(Config.globalState.iconPath, path);
-      MessageManager.showMessageWithName(`The icon path has been successfully set.`);
-      vscode.commands.executeCommand(Config.commands.setIcon);
+      let btnPressed = await MessageManager.showMessageWithName(
+        `The icon path has been successfully set. Do you want to set the icon?`,
+        undefined,
+        ["Set Icon"]
+      );
+
+      if (btnPressed === "Set Icon") {
+        vscode.commands.executeCommand(Config.commands.setIcon);
+      }
     });
     const cmdSetShortcutPath = vscode.commands.registerCommand(Config.commands.setShortcutPath, async () => {
       MessageManager.showMessageWithName("Please select the Visual Studio Code shortcut.");
