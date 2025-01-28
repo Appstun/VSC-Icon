@@ -1,9 +1,9 @@
-# Change Log
+# Change Log - VSC Icon
 
-All notable changes to the "vsc-icon" extension will be documented in this file.
+All changed, added and removed features will be written down here.
+See the Github commits for a complete change log.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
+## [0.1.0] - 2025-01-28
 
 - Initial release
+- Added all current features
