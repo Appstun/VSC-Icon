@@ -198,8 +198,25 @@ export async function activate(context: vscode.ExtensionContext) {
     return;
   }
 
-  FileManager.checkIconPath(Index.config.get(Config.configKeys.iconPath, ""), true);
-  FileManager.checkShortcutPath(Index.config.get(Config.configKeys.shortcutPath, ""), true);
+  FileManager.checkIconPath(Index.globalState.get(Config.globalState.iconPath, ""), true);
+  FileManager.checkShortcutPath(Index.globalState.get(Config.globalState.shortcutPath, ""), true);
+
+  const version = context.globalState.get<string>(Config.globalState.vscVersion);
+  if (version && version !== vscode.version) {
+    let btnPressed = await MessageManager.showMessageWithName(
+      {
+        type: "info",
+        message: `There was a Visual Studio Code update. Do you want to set the icon again?`,
+      },
+      undefined,
+      ["Set Icon"]
+    );
+
+    if (btnPressed === "Set Icon") {
+      vscode.commands.executeCommand(Config.commands.setIcon);
+    }
+  }
+  context.globalState.update(Config.globalState.vscVersion, vscode.version);
 }
 
 export function deactivate() {}
