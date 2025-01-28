@@ -1,6 +1,7 @@
 {
   "name": "vsc-icon",
   "displayName": "VSC Icon",
+  "publisher": "Appstun",
   "description": "A Extention that changes your Visual Studio Code Shortcut Icon.",
   "private": true,
   "version": "0.1.0",
