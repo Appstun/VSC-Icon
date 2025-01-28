@@ -6,6 +6,7 @@ import { MessageManager } from "./MessageManager";
 
 export namespace Index {
   export let globalState: vscode.Memento;
+  export let logger = vscode.window.createOutputChannel(Config.extensionName);
   export let pathStates = { icon: false, shortcut: false };
   export const dev_states = { clearStates: false };
 
@@ -36,7 +37,7 @@ export namespace Index {
       ) {
         MessageManager.showMessageWithName({
           type: "error",
-          message: `Failed to set the icon.`,
+          message: `Failed to set the icon. Please check the paths.`,
         });
         progress.finish();
         return;

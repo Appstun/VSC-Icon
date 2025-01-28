@@ -1,5 +1,6 @@
 import { spawnSync } from "child_process";
 import path from "path";
+import { Logging } from "./logging";
 
 export type ShortcutData = {
   fullName: string;
@@ -23,6 +24,8 @@ export namespace Powershell {
     let process = spawnSync(`powershell -command "${cmd}"`, { shell: true, timeout: 15000 });
 
     if (process.status !== 0) {
+      Logging.logger("error", "(getShortcutData) Failed to get the shortcut data.");
+      Logging.logger("error", process.stderr.toString(), true);
       return undefined;
     }
 
@@ -80,6 +83,11 @@ export namespace Powershell {
   export function getCodeProcessPath(): string[] {
     let codeProcess = spawnSync(`powershell -command (Get-Process -Name 'Code').path`, { shell: true, timeout: 15000 });
 
+    if (codeProcess.status !== 0) {
+      Logging.logger("error", "(getCodeProcessPath) Failed to get the path of the Code process.");
+      Logging.logger("error", codeProcess.stderr.toString(), true);
+    }
+
     let paths: string[] = [];
     const lines = codeProcess.stdout.toString().trim().split("\n");
     for (let i = 0; i < lines.length; i++) {
@@ -99,6 +107,10 @@ export namespace Powershell {
       `$shortcut.Save();`;
 
     let executeIconChange = spawnSync(`powershell -command "${psCommand}"`, { shell: true, timeout: 15000 });
+    if (executeIconChange.status !== 0) {
+      Logging.logger("error", "(setShortcutIcon) Failed to set the icon.");
+      Logging.logger("error", executeIconChange.stderr.toString(), true);
+    }
 
     return executeIconChange.status === 0;
   }
