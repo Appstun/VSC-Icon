@@ -1,5 +1,5 @@
-This extension changes the shortcut icon of your Visual Studio Code to an icon you like.
 If you have a custom icon for VS Code, it will be reverted to the default icon when you install an update.
+This extension changes the shortcut icon of your Visual Studio Code to an icon you like and sets it again after an update.
 
 ## Requirements
 
