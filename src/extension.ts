@@ -206,7 +206,7 @@ export async function activate(context: vscode.ExtensionContext) {
       },
       {
         modal: true,
-        detail: `This message is sent from the extension ${Config.extensionName}.`,
+        detail: `This message was sent from the extension ${Config.extensionName}.`,
       },
       ["Next Step"]
     );

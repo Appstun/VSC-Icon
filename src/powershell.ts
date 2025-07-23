@@ -92,7 +92,7 @@ export namespace Powershell {
     const lines = codeProcess.stdout.toString().trim().split("\n");
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].toLowerCase().includes("code.exe") && !paths.includes(lines[i])) {
-        paths.push(lines[i]);
+        paths.push(lines[i].replaceAll("\r", "").trim());
       }
     }
 
