@@ -127,7 +127,10 @@ export namespace MessageManager {
     items: T[],
     options: vscode.QuickPickOptions & { canPickMany: true }
   ): Promise<number[] | undefined>;
-  export async function showQuickPick<T extends string>(items: T[], options?: vscode.QuickPickOptions): Promise<number[] | number | undefined> {
+  export async function showQuickPick<T extends string>(
+    items: T[],
+    options?: vscode.QuickPickOptions
+  ): Promise<number[] | number | undefined> {
     const result = (await vscode.window.showQuickPick(items, options)) as T[] | T | undefined;
     if (result === undefined) {
       return undefined;

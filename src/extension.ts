@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { Powershell } from "./powershell";
-import { FileManager } from "./FileManager";
 import { Config } from "./config";
+import { FileManager } from "./FileManager";
 import { MessageManager } from "./MessageManager";
+import { Powershell } from "./powershell";
 
 export namespace Index {
   export let globalState: vscode.Memento;
@@ -73,16 +73,14 @@ export namespace Index {
         return;
       }
 
-      Index.globalState.update(Config.globalState.iconPath, path);
-      let btnPressed = await MessageManager.showMessageWithName(
-        `The icon path has been successfully set. Do you want to set the icon?`,
-        undefined,
-        ["Set Icon"]
-      );
-
-      if (btnPressed === "Set Icon") {
-        vscode.commands.executeCommand(Config.commands.setIcon);
-      }
+      await Index.globalState.update(Config.globalState.iconPath, path);
+      MessageManager.showMessageWithName(`The icon path has been successfully set. Do you want to set the icon?`, undefined, [
+        "Set Icon",
+      ]).then((btnPressed) => {
+        if (btnPressed === "Set Icon") {
+          vscode.commands.executeCommand(Config.commands.setIcon);
+        }
+      });
     });
     const cmdSetShortcutPath = vscode.commands.registerCommand(Config.commands.setShortcutPath, async () => {
       MessageManager.showMessageWithName("Please select the Visual Studio Code shortcut.");

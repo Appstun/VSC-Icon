@@ -1,9 +1,9 @@
-import path from "path";
 import * as fs from "fs";
-import { Index } from "./extension";
-import { Powershell } from "./powershell";
+import path from "path";
 import { Config } from "./config";
-import { MessageManager, MessageType } from "./MessageManager";
+import { Index } from "./extension";
+import { MessageManager } from "./MessageManager";
+import { Powershell } from "./powershell";
 
 export namespace FileManager {
   export async function checkShortcutPath(shortcutPath: string, isStartUpCheck: boolean = false): Promise<boolean> {
