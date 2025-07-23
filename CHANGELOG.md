@@ -13,3 +13,10 @@ See the Github commits for a complete change log.
 ### Changed
 
 - Fixed first-time popup
+
+## [0.1.2] - 2025-07-24
+
+### Changed
+
+- Fixed extension "pausing" while waitimg for button input on toast messages. (even if they were not visible anymore)
+- Changed `is` to `was` in "welcome" message
