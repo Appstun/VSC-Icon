@@ -14,7 +14,7 @@ export namespace FileManager {
       }
 
       let path = (await findVscShortcut()) || Config.paths.vscUser;
-      Index.globalState.update("shortcutPath", path);
+      await Index.globalState.update(Config.globalState.shortcutPath, path);
       shortcutPath = path;
     }
     if (!fs.existsSync(shortcutPath)) {
