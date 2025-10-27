@@ -122,4 +122,26 @@ export namespace FileManager {
     Index.pathStates.shortcut = result !== undefined;
     return result;
   }
+
+  export function getCodeInstalltype(): "system" | "user" | "unknown" {
+    const codePaths = Powershell.getCodeProcessPath();
+
+    let sysPaths = 0;
+    let userPaths = 0;
+    for (let path of codePaths) {
+      if (path.toLowerCase().replaceAll("\\\\", "\\").startsWith((process.env.USERPROFILE || "087f6dujztg").toLowerCase())) {
+        userPaths++;
+      } else if (path.toLowerCase().replaceAll("\\\\", "\\").startsWith((process.env.PROGRAMFILES || "087f6dujztg").toLowerCase())) {
+        sysPaths++;
+      }
+    }
+
+    if (sysPaths > 0 && userPaths === 0) {
+      return "system";
+    } else if (userPaths > 0 && sysPaths === 0) {
+      return "user";
+    } else {
+      return "unknown";
+    }
+  }
 }

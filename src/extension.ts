@@ -223,25 +223,24 @@ export async function activate(context: vscode.ExtensionContext) {
   FileManager.checkIconPath(Index.globalState.get(Config.globalState.iconPath, ""), true);
   FileManager.checkShortcutPath(Index.globalState.get(Config.globalState.shortcutPath, ""), true);
 
-  const version = context.globalState.get<string>(Config.globalState.vscVersion);
-  if (version && version !== vscode.version) {
-    MessageManager.showMessageWithName(
-      {
-        type: "info",
-        message: `There was a Visual Studio Code update. Do you want to set the icon again?`,
-      },
-      undefined,
-      ["Set Icon"]
-    ).then((btnPressed) => {
-      if (btnPressed === "Set Icon") {
-        vscode.commands.executeCommand(Config.commands.setIcon);
-      }
-
-      context.globalState.update(Config.globalState.vscVersion, vscode.version);
-    });
-  } else {
-    context.globalState.update(Config.globalState.vscVersion, vscode.version);
+  if (FileManager.getCodeInstalltype() !== "system") {
+    const version = context.globalState.get<string>(Config.globalState.vscVersion);
+    if (version && version !== vscode.version) {
+      MessageManager.showMessageWithName(
+        {
+          type: "info",
+          message: `There was a Visual Studio Code update. Do you want to set the icon again?`,
+        },
+        undefined,
+        ["Set Icon"]
+      ).then((btnPressed) => {
+        if (btnPressed === "Set Icon") {
+          vscode.commands.executeCommand(Config.commands.setIcon);
+        }
+      });
+    }
   }
+  context.globalState.update(Config.globalState.vscVersion, vscode.version);
 }
 
 export function deactivate() {}
