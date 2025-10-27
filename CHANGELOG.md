@@ -18,5 +18,15 @@ See the Github commits for a complete change log.
 
 ### Changed
 
-- Fixed extension "pausing" while waitimg for button input on toast messages. (even if they were not visible anymore)
-- Changed `is` to `was` in "welcome" message
+- Fixed extension pausing while waiting for button input on toast notifications
+- Changed "is" to "was" in welcome message
+
+## [0.1.4] - 2025-10-27
+
+### Added
+
+- Suppress update message for system-wide installations of VS Code
+
+### Changed
+
+- Updated README.md
