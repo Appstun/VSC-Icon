@@ -4,7 +4,7 @@
   "publisher": "Appstun",
   "description": "A Extention that changes your Visual Studio Code Shortcut Icon.",
   "private": true,
-  "version": "0.1.4",
+  "version": "0.1.41",
   "icon": "/icons/icon.png",
   "engines": {
     "vscode": "^1.90.0"
@@ -62,11 +62,11 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@types/vscode": "^1.90.0",
-    "@typescript-eslint/eslint-plugin": "^8.46.2",
-    "@typescript-eslint/parser": "^8.46.2",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.5.2",
-    "eslint": "^9.38.0",
+    "eslint": "^9.39.1",
     "typescript": "^5.9.3"
   }
 }

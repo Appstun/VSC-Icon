@@ -30,3 +30,9 @@ See the Github commits for a complete change log.
 ### Changed
 
 - Updated README.md
+
+## [0.1.4] - 2025-12-09
+
+### Changed
+
+- Fixed grammar in README.md
