@@ -36,3 +36,9 @@ See the Github commits for a complete change log.
 ### Changed
 
 - Fixed grammar in README.md
+
+
+## [0.1.5] - 2026-03-25
+
+### Fixed
+- Vulnerabilities in dependencies
